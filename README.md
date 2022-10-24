@@ -1,5 +1,9 @@
 # Ebay-Kleinanzeigen notifier
 
+Update:
+- several ebay links can be put into the bot.
+- /restart command empties the link queue
+
 This is very simple Telegram bot checking new ads on [Ebay-Kleinanzeigen.de](https://www.ebay-kleinanzeigen.de/stadt/muenchen/).
 
 It accepts just a link to a page with the search results (i.e. `https://www.ebay-kleinanzeigen.de/s-pc-zubehoer-software/grafikkarten/81825/anzeige:angebote/preis:100:500/c225l16390r150+pc_zubehoer_software.art_s:grafikkarten`) and then starts monitoring this page (by default every 15 minutes).
