@@ -112,9 +112,14 @@ def get_items_per_url(url):
 def start(update, context):
     """Send a message when the command /start is issued."""
     log = utils.get_logger()
-    log.info('Start')
-    update.message.reply_text('Hi!')
-
+    log.info('Restart')
+    for chat_id in last_items.keys():
+        try:
+          scheduler.remove_job(str(chat_id))
+        except:
+          update.message.reply_text('An exception occurred')
+    update.message.reply_text('Restarted!')
+    
 
 def error(update, context):
     """Log Errors caused by Updates."""
@@ -125,15 +130,15 @@ def echo(update: Update, context):
     msg: Message = update.message
 
     url = update.message.text
-    #used message_id instead of chat_id
     chat_id = update.effective_message.message_id
 
     log = utils.get_logger()
     log.info('Started echo')
-
+        
     if chat_id not in last_items:
         # Nothing here, schedule
-        scheduler.add_job(echo, trigger='interval', args=(update, context), minutes=15, id=str(chat_id))
+        scheduler.add_job(echo, trigger='interval', args=(update, context), minutes=1, id=str(chat_id))
+        log.info(str(chat_id))
         log.info('Scheduled job')
         last_items[chat_id] = {'last_item': None, 'url': url}
 
@@ -156,10 +161,10 @@ def main():
 
     updater = Updater(bot=utils.get_bot(), use_context=True)
     dp = updater.dispatcher
-
-    dp.add_handler(CommandHandler("start", start))
+    
+    dp.add_handler(CommandHandler("restart", start))
     dp.add_handler(MessageHandler(Filters.text, echo))
-
+    
     # log all errors
     dp.add_error_handler(error)
 
