@@ -117,7 +117,7 @@ def start(update, context):
         try:
           scheduler.remove_job(str(chat_id))
         except:
-          update.message.reply_text('An exception occurred')
+          log.info('imperfection in the code...')
     update.message.reply_text('Restarted!')
     
 
@@ -137,7 +137,7 @@ def echo(update: Update, context):
         
     if chat_id not in last_items:
         # Nothing here, schedule
-        scheduler.add_job(echo, trigger='interval', args=(update, context), minutes=1, id=str(chat_id))
+        scheduler.add_job(echo, trigger='interval', args=(update, context), minutes=15, id=str(chat_id))
         log.info(str(chat_id))
         log.info('Scheduled job')
         last_items[chat_id] = {'last_item': None, 'url': url}
