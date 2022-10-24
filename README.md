@@ -8,28 +8,30 @@ This is very simple Telegram bot checking new ads on [Ebay-Kleinanzeigen.de](htt
 
 It accepts just a link to a page with the search results (i.e. `https://www.ebay-kleinanzeigen.de/s-pc-zubehoer-software/grafikkarten/81825/anzeige:angebote/preis:100:500/c225l16390r150+pc_zubehoer_software.art_s:grafikkarten`) and then starts monitoring this page (by default every 15 minutes).
 
+It doesn't work with the mobile version.
+
 When some new ad appears, you'll be notified. 
  
  # Documentation
  
- ## Algorithm
-
-No rocket science here, I made it just for myself and the simplest approach worked well. Bot remembers the topmost
-item in the list for the current `chat_id` and during subsequent checks prints all the ads until the last remembered item
-is met. Obviously, this will cause a full update if the last item disappeared, but during ~2 weeks of usage I haven't really noticed 
-such a case.
- 
  ### Requirements
 Python 3.6+ and Docker (preferrably)
- 
- ### Manual
-The bot can be run in webhook and polling modes. For webhook, bot has to be accessible over HTTPS from external Internet.
- 
-Commands for running:
 
-    git pull
-    docker-compose build
-    docker-compose up -d
+### Setup for dummies
+
+sudo apt update
+sudo apt upgrade
+sudo git clone https://github.com/0a1b/ebay-kleinanzeigen_enhanced.git
+cd /home/a/ebay-kleinanzeigen_enhanced (where it was unpacked)
+sudo apt install docker-compose (i am using raspberry pi os)
+sudo nano .env (update the environmental file by putting the botfather key plainly into it and writing sth number in debug)
+docker-compose build
+sudo docker-compose up -d
+systemctl start docker (if it doesn't work @.@)
+sudo docker ps -a (see your docker)
+
+sudo docker stop 30e7072151df (id can be found in the list of the command above, in case you want to remove an instance, you have to stop it frst if it was running in the first place)
+sudo docker rm 30e7072151df (in case you want to remove an instance)
     
 ### Public availability and terms of usage
 
