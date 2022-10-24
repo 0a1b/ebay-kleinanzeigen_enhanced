@@ -125,7 +125,8 @@ def echo(update: Update, context):
     msg: Message = update.message
 
     url = update.message.text
-    chat_id = update.effective_chat.id
+    #used message_id instead of chat_id
+    chat_id = update.effective_message.message_id
 
     log = utils.get_logger()
     log.info('Started echo')
