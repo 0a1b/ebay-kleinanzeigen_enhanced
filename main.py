@@ -17,7 +17,7 @@ jobstores = {
 }
 # TODO: re-enable SQLite storage for persistency
 # scheduler = BackgroundScheduler(jobstores=jobstores)
-scheduler = BackgroundScheduler()
+scheduler = BackgroundScheduler({'apscheduler.job_defaults.max_instances': 5})
 scheduler.start()
 
 last_items = {}
@@ -67,8 +67,10 @@ def get_items_per_url(url):
         if 'ref="/pro/' in item:
             # This is ad block, skip
             continue
-
         soup = BeautifulSoup(item, 'html.parser')
+        tops = soup.find_all("i", {"class": 'icon icon-smaller icon-feature-topad'})
+        if len(tops) > 0:
+            continue
         soup_result = soup.find_all("a", {"class": 'ellipsis'})
         if len(soup_result) > 0:
             url = soup_result[0]['href']
@@ -77,15 +79,15 @@ def get_items_per_url(url):
             continue
 
         price_line = re.findall('aditem-main--middle--price.*?>(.*?)</p>', item, re.S)
+        
         if len(price_line) > 0:
             price_line = price_line[0]
         else:
             price_line = "0"
         torg = 'VB' in price_line
         price = None
-        if prices := re.findall(r'\d+', price_line, re.S):
-            price = int(prices[0])
-
+        if prices := re.findall(r'[0-9]+.[0-9]+', price_line, re.S):
+            price = prices[0]
         date = datetime.datetime.now()
         try:
             date = re.findall('icon icon-small icon-calendar-open.*?</i>(.*?)</', item, re.S)[0].strip()
@@ -106,6 +108,7 @@ def get_items_per_url(url):
         log.info("URL " + url)
         log.info("Title " + name)
         items.append(Item(name, price, torg, url, date, image))
+        
     return items
 
 
